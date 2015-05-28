@@ -84,7 +84,7 @@ public class UserService {
 		List<User> users = new ArrayList<User>();
 		try {
 			PreparedStatement preparedStatement = connection.
-					prepareStatement("SELECT idservicio_detalle from vehículo_has_chofer_has_servicio_detalle where idchofer=? limit 15");
+					prepareStatement("SELECT idservicio_detalle from servicio_detalle where idchofer=? limit 15");
 			preparedStatement.setInt(1, userId);
 			ResultSet rs = preparedStatement.executeQuery();
 			while (rs.next()) {
@@ -167,13 +167,13 @@ public class UserService {
 		User user = new User();
 		try{
 			PreparedStatement preparedStatement = connection.
-					prepareStatement("select fecha_hora from servicio_detalle where idservicio_detalle=?");
+					prepareStatement("select FECHA from servicio_detalle where idservicio_detalle=?");
 			preparedStatement.setInt(1, userId);
 			ResultSet rs = preparedStatement.executeQuery();
 			
 			if(rs.next()){
 				
-				user.setFirstName(rs.getString("fecha_hora"));
+				user.setFirstName(rs.getString("FECHA"));
 				
 				
 			}
@@ -205,14 +205,14 @@ public class UserService {
 		User user = new User();
 		try{
 			PreparedStatement preparedStatement = connection.
-					prepareStatement("SELECT origen , destino FROM servicio WHERE idservicio=?");
+					prepareStatement("SELECT descripcion FROM servicio WHERE idservicio=?");
 			preparedStatement.setInt(1, userId);
 			ResultSet rs = preparedStatement.executeQuery();
 			
 			if(rs.next()){
 				
-				user.setFirstName(rs.getString("origen"));
-				user.setLastName(rs.getString("destino"));
+				user.setFirstName(rs.getString("descripcion"));
+				
 				
 			}
 		} catch(SQLException e){
@@ -260,11 +260,30 @@ public class UserService {
 		return user;
 	}
 	
+	public User getIdDescripcionservicio(int userId){
+		User user = new User();
+		try{
+			PreparedStatement preparedStatement = connection.
+					prepareStatement("SELECT idtipo_servicio from servicio where idservicio=?");
+			preparedStatement.setInt(1, userId);
+			ResultSet rs = preparedStatement.executeQuery();
+			
+			if(rs.next()){
+				
+				user.setFirstName(rs.getString("idtipo_servicio"));
+				
+			}
+		} catch(SQLException e){
+			e.printStackTrace();
+		}
+		return user;
+	}
+	
 	public User getDescripcionservicio(int userId){
 		User user = new User();
 		try{
 			PreparedStatement preparedStatement = connection.
-					prepareStatement("SELECT descripcion from Servicio where idservicio=?");
+					prepareStatement("SELECT descripcion from tipo_servicio where idtipo_servicio=?");
 			preparedStatement.setInt(1, userId);
 			ResultSet rs = preparedStatement.executeQuery();
 			
@@ -279,12 +298,11 @@ public class UserService {
 		return user;
 	}
 
-
 	public User getNombrepax(int userId){
 		User user = new User();
 		try{
 			PreparedStatement preparedStatement = connection.
-					prepareStatement("SELECT Pax from File where idFile=?");
+					prepareStatement("SELECT PAX from File where idFile=?");
 			preparedStatement.setInt(1, userId);
 			ResultSet rs = preparedStatement.executeQuery();
 			
@@ -386,7 +404,7 @@ public class UserService {
 		User user = new User();
 		try{
 			PreparedStatement preparedStatement = connection.
-					prepareStatement("SELECT nombre,apellido from guia_trasladista where idtrasladista=?");
+					prepareStatement("SELECT nombre,apellido from trasladista where idtrasladista=?");
 			preparedStatement.setInt(1, userId);
 			ResultSet rs = preparedStatement.executeQuery();
 			
@@ -444,7 +462,7 @@ public class UserService {
 		User user = new User();
 		try{
 					PreparedStatement preparedStatement = connection
-					.prepareStatement("INSERT into incidencia(idincidencia,descripcion,idestado_incidencia,idtipo_incidencia,idservicio_detalle,fecha_creacion) value (?,?,?,?,?,?)");
+					.prepareStatement("INSERT into incidencia(idincidencia,descripcion,estado_incidencia_idestado_incidencia,tipo_incidencia_idtipo_incidencia,idservicio_detalle,FECHA_REGISTRO) value (?,?,?,?,?,?)");
 					
 					
 					preparedStatement.setInt(1, idinc);

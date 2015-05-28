@@ -51,13 +51,19 @@ public class SpringServiceController {
 		return user;
 	}
 	
+	  //ID TIPO DESCRIPCION SERVICIO
+	@RequestMapping(value = "/IdDescripcionservicio/{id}", method = RequestMethod.GET,headers="Accept=application/json")
+	public User getIdDescripcionservicio(@PathVariable int id) {
+		User user=userService.getIdDescripcionservicio(id);
+		return user;
+	}
+	
 	  //DESCRIPCION SERVICIO
 	@RequestMapping(value = "/Descripcionservicio/{id}", method = RequestMethod.GET,headers="Accept=application/json")
 	public User getDescripcionservicio(@PathVariable int id) {
 		User user=userService.getDescripcionservicio(id);
 		return user;
 	}
-	
 	
 	  //ID PAX 
 	@RequestMapping(value = "/idPax/{id}", method = RequestMethod.GET,headers="Accept=application/json")
@@ -138,7 +144,7 @@ public class SpringServiceController {
 		return user;
 	}
 	
-	//CAMBIAR ESTADO SERVICIO
+	//CAMBIAR ESTADO SERVICIO	
 	@RequestMapping(value = "/cambiarestadoservicio/{id}", method = RequestMethod.GET,headers="Accept=application/json")
 	public User cambiarestado(@PathVariable String id) {
 		User user=userService.cambiarestadoservicio(id);
