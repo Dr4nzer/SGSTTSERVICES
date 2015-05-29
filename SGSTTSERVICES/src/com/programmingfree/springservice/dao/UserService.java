@@ -226,7 +226,7 @@ public class UserService {
 		User user = new User();
 		try{
 			PreparedStatement preparedStatement = connection.
-					prepareStatement("SELECT idservicio_detalle from servicio_detalle as b where b.idservicio_detalle=?");
+					prepareStatement("SELECT idservicio_detalle from servicio_detalle where idservicio_detalle=?");
 			preparedStatement.setInt(1, userId);
 			ResultSet rs = preparedStatement.executeQuery();
 			
