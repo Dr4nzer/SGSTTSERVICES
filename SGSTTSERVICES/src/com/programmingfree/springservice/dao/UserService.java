@@ -226,13 +226,13 @@ public class UserService {
 		User user = new User();
 		try{
 			PreparedStatement preparedStatement = connection.
-					prepareStatement("SELECT iddetalle_servicio from Detalle_Servicio where idservicio=?");
+					prepareStatement("SELECT idservicio_detalle from servicio_detalle as b where b.idservicio_detalle=?");
 			preparedStatement.setInt(1, userId);
 			ResultSet rs = preparedStatement.executeQuery();
 			
 			if(rs.next()){
 				
-				user.setFirstName(rs.getString("iddetalle_servicio"));
+				user.setFirstName(rs.getString("idservicio_detalle"));
 				
 			}
 		} catch(SQLException e){
@@ -245,13 +245,13 @@ public class UserService {
 		User user = new User();
 		try{
 			PreparedStatement preparedStatement = connection.
-					prepareStatement("SELECT iddetalle_servicio from Servicio where idservicio=?");
+					prepareStatement("SELECT idservicio_detalle from Servicio where idservicio=?");
 			preparedStatement.setInt(1, userId);
 			ResultSet rs = preparedStatement.executeQuery();
 			
 			if(rs.next()){
 				
-				user.setFirstName(rs.getString("iddetalle_servicio"));
+				user.setFirstName(rs.getString("idservicio_detalle"));
 				
 			}
 		} catch(SQLException e){
