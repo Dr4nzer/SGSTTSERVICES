@@ -462,7 +462,7 @@ public class UserService {
 		User user = new User();
 		try{
 					PreparedStatement preparedStatement = connection
-					.prepareStatement("INSERT into incidencia(idincidencia,descripcion,estado_incidencia_idestado_incidencia,tipo_incidencia_idtipo_incidencia,idservicio_detalle,FECHA_REGISTRO) value (?,?,?,?,?,?)");
+					.prepareStatement("INSERT into incidencia(idincidencia,descripcion,idestado_incidencia,idtipo_incidencia,idservicio_detalle,FECHA_REGISTRO) value (?,?,?,?,?,?)");
 					
 					
 					preparedStatement.setInt(1, idinc);
