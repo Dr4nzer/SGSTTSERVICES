@@ -84,7 +84,7 @@ public class UserService {
 		List<User> users = new ArrayList<User>();
 		try {
 			PreparedStatement preparedStatement = connection.
-					prepareStatement("SELECT idservicio_detalle from servicio_detalle where idchofer=? limit 15");
+					prepareStatement("SELECT idservicio_detalle from servicio_detalle where idchofer=? and idestado_servicio=1 limit 15");
 			preparedStatement.setInt(1, userId);
 			ResultSet rs = preparedStatement.executeQuery();
 			while (rs.next()) {
@@ -439,38 +439,39 @@ public class UserService {
 
 //FALTA COMPLETAR LOGIN------------------------------------------------------------------------------------------
 	
-	public User Login(String use,int id){
+	public User Login(String nombre,String dni){
 		User user = new User();
 		try{
 					PreparedStatement preparedStatement = connection
-					.prepareStatement("insert into estado_incidencia(idestado_incidencia,descripcion) values (?,?)");
+					.prepareStatement("select idchofer from chofer where nombre=? and dni=?");
+					preparedStatement.setString(1,nombre);
+					preparedStatement.setString(2,dni);
+					ResultSet rs = preparedStatement.executeQuery();
 					
-					
-					preparedStatement.setString(1, use);
-					preparedStatement.setInt(2, id);
-					 preparedStatement.executeUpdate();
-					
-					} catch (SQLException e) {
-					e.printStackTrace();
+					if(rs.next()){
+						
+						user.setFirstName(rs.getString("idchofer"));		
 					}
+				} catch(SQLException e){
+					e.printStackTrace();
+				}
 		return user;
 	}
 
 //INSERTAR INCIDENCIAS-----------------------------------------------------------------------------------------------
 	
-	public User Insertincidencia(int idinc,String desc,String idestadoinc,String idtipoinc,String idserv,String fecha){
+	public User Insertincidencia(int idinc,String desc,String idestadoinc,String idtipoinc,String idserv,String fecha,String fecha2){
 		User user = new User();
 		try{
 					PreparedStatement preparedStatement = connection
-					.prepareStatement("INSERT into incidencia(idincidencia,descripcion,idestado_incidencia,idtipo_incidencia,idservicio_detalle,FECHA_REGISTRO) value (?,?,?,?,?,?)");
-					
-					
+					.prepareStatement("INSERT into incidencia(idincidencia,descripcion,idestado_incidencia,idtipo_incidencia,idservicio_detalle,FECHA_REGISTRO,FECHA_MODIFICACION) value (?,?,?,?,?,?,?)");		
 					preparedStatement.setInt(1, idinc);
 					preparedStatement.setString(2, desc);
 					preparedStatement.setString(3,idestadoinc);
 					preparedStatement.setString(4,idtipoinc);
 					preparedStatement.setString(5,idserv);
 					preparedStatement.setString(6,fecha);
+					preparedStatement.setString(7,fecha2);
 					 preparedStatement.executeUpdate();
 					
 					} catch (SQLException e) {
@@ -512,8 +513,80 @@ public class UserService {
 		}
 		return user;
 	}
+	
+	public User getIdCliente(int userId){
+		User user = new User();
+		try{
+			PreparedStatement preparedStatement = connection.
+					prepareStatement("SELECT idCliente from File where idFile=?");
+			preparedStatement.setInt(1, userId);
+			ResultSet rs = preparedStatement.executeQuery();
+			
+			if(rs.next()){
+				
+				user.setFirstName(rs.getString("idCliente"));		
+			}
+		} catch(SQLException e){
+			e.printStackTrace();
+		}
+		return user;
+	}
 		
+	public User getNombreCliente(int userId){
+		User user = new User();
+		try{
+			PreparedStatement preparedStatement = connection.
+					prepareStatement("SELECT Nombre from Cliente where idCliente=?");
+			preparedStatement.setInt(1, userId);
+			ResultSet rs = preparedStatement.executeQuery();
+			
+			if(rs.next()){
+				
+				user.setFirstName(rs.getString("Nombre"));		
+			}
+		} catch(SQLException e){
+			e.printStackTrace();
+		}
+		return user;
+	}
+	
+	public User getOrigen(String id){
+		User user = new User();
+		try{
+			PreparedStatement preparedStatement = connection.
+					prepareStatement("SELECT Origen , destino from servicio where descripcion=?");
+			preparedStatement.setString(1, id);
+			ResultSet rs = preparedStatement.executeQuery();
+			
+			if(rs.next()){
+				
+				user.setFirstName(rs.getString("origen"));
+				user.setLastName(rs.getString("destino"));		
+			}
+		} catch(SQLException e){
+			e.printStackTrace();
+		}
+		return user;
+	}
+	
+	public List<User> getDescripcion() {
+		List<User> users = new ArrayList<User>();
+		try {
+			PreparedStatement preparedStatement = connection.
+					prepareStatement("SELECT DESCRIPCION FROM SERVICIO limit 15");
+			ResultSet rs = preparedStatement.executeQuery();
+			while (rs.next()) {
+				User user = new User();
 
+				user.setFirstName(rs.getString("DESCRIPCION"));
+				users.add(user);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return users;
+	}
 }
 
 

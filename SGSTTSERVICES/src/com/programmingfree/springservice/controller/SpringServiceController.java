@@ -107,6 +107,13 @@ public class SpringServiceController {
 		return user;
 	}
 	
+	  //ID CHOFER
+	@RequestMapping(value = "/login/{nombre}/pass/{dni}", method = RequestMethod.GET,headers="Accept=application/json")
+	public User getLogin(@PathVariable String nombre,@PathVariable String dni) {
+		User user=userService.Login(nombre, dni);
+		return user;
+	}
+	
 	//ID DEL TRASLADISTA
 	@RequestMapping(value = "/idtrasl/{id}", method = RequestMethod.GET,headers="Accept=application/json")
 	public User getidtrasl(@PathVariable int id) {
@@ -152,12 +159,35 @@ public class SpringServiceController {
 	}
 	
 	//INSERTAR INCIDENCIA
-	@RequestMapping(value = "/insertinc/{idinc}/zx/{desc}/cv/{idestadoinc}/bn/{idtipoinc}/ml/{idserv}/kj/{fecha}", method = RequestMethod.GET,headers="Accept=application/json")
-	public User insert(@PathVariable int idinc,@PathVariable String desc,@PathVariable String idestadoinc,@PathVariable String idtipoinc,@PathVariable String idserv,@PathVariable String fecha) {
-		User user=userService.Insertincidencia(idinc,desc,idestadoinc,idtipoinc,idserv,fecha);
+	@RequestMapping(value = "/insertinc/{idinc}/zx/{desc}/cv/{idestadoinc}/bn/{idtipoinc}/ml/{idserv}/kj/{fecha}/ej/{fecha2}", method = RequestMethod.GET,headers="Accept=application/json")
+	public User insert(@PathVariable int idinc,@PathVariable String desc,@PathVariable String idestadoinc,@PathVariable String idtipoinc,@PathVariable String idserv,@PathVariable String fecha,@PathVariable String fecha2) {
+		User user=userService.Insertincidencia(idinc,desc,idestadoinc,idtipoinc,idserv,fecha,fecha2);
 		return user;
 	}
 	
+	@RequestMapping(value = "/getIdCliente/{id}", method = RequestMethod.GET,headers="Accept=application/json")
+	public User getIdCliente(@PathVariable int id) {
+		User user=userService.getIdCliente(id);
+		return user;
+	}
+	
+	@RequestMapping(value = "/getNombreCliente/{id}", method = RequestMethod.GET,headers="Accept=application/json")
+	public User getNombreCliente(@PathVariable int id) {
+		User user=userService.getNombreCliente(id);
+		return user;
+	}
+	
+	@RequestMapping(value = "/getOrigendestino/{id}", method = RequestMethod.GET,headers="Accept=application/json")
+	public User getOrigendestino(@PathVariable String id) {
+		User user=userService.getOrigen(id);
+		return user;
+	}
+	
+	@RequestMapping(value="/listadescripcion",method = RequestMethod.GET,headers="Accept=application/json")
+	public List<User> getDescripcion() {
+		List<User> users=userService.getDescripcion();
+		return users;
+	}
 }
 
 	
