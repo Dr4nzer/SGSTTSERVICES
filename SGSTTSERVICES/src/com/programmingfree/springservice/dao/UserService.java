@@ -84,7 +84,7 @@ public class UserService {
 		List<User> users = new ArrayList<User>();
 		try {
 			PreparedStatement preparedStatement = connection.
-					prepareStatement("SELECT idservicio_detalle from servicio_detalle where idchofer=? and idestado_servicio=1 limit 15");
+					prepareStatement("SELECT idservicio_detalle from servicio_detalle where idchofer=? and ESTADO=1 limit 15");
 			preparedStatement.setInt(1, userId);
 			ResultSet rs = preparedStatement.executeQuery();
 			while (rs.next()) {
@@ -439,18 +439,36 @@ public class UserService {
 
 //FALTA COMPLETAR LOGIN------------------------------------------------------------------------------------------
 	
-	public User Login(String nombre,String dni){
+	public User Login(String nombre){
 		User user = new User();
 		try{
 					PreparedStatement preparedStatement = connection
-					.prepareStatement("select idchofer from chofer where nombre=? and dni=?");
+					.prepareStatement("select idchofer from chofer where nombre=?");
 					preparedStatement.setString(1,nombre);
-					preparedStatement.setString(2,dni);
+					
 					ResultSet rs = preparedStatement.executeQuery();
 					
 					if(rs.next()){
 						
-						user.setFirstName(rs.getString("idchofer"));		
+						user.setUserid(rs.getInt("idchofer"));		
+					}
+				} catch(SQLException e){
+					e.printStackTrace();
+				}
+		return user;
+	}
+	
+	public User Login2(String dni){
+		User user = new User();
+		try{
+					PreparedStatement preparedStatement = connection
+					.prepareStatement("select idchofer from chofer where dni=?");
+					preparedStatement.setString(1,dni);
+					ResultSet rs = preparedStatement.executeQuery();
+					
+					if(rs.next()){
+						
+						user.setUserid(rs.getInt("idchofer"));		
 					}
 				} catch(SQLException e){
 					e.printStackTrace();
@@ -505,7 +523,7 @@ public class UserService {
 		User user = new User();
 		try{
 			PreparedStatement preparedStatement = connection.
-					prepareStatement("UPDATE servicio_detalle SET idestado_servicio=4 WHERE idservicio_detalle=?");
+					prepareStatement("UPDATE servicio_detalle SET ESTADO=4 WHERE idservicio_detalle=?");
 			preparedStatement.setString(1, id);
 			 preparedStatement.executeUpdate();
 		} catch(SQLException e){

@@ -108,9 +108,16 @@ public class SpringServiceController {
 	}
 	
 	  //ID CHOFER
-	@RequestMapping(value = "/login/{nombre}/pass/{dni}", method = RequestMethod.GET,headers="Accept=application/json")
-	public User getLogin(@PathVariable String nombre,@PathVariable String dni) {
-		User user=userService.Login(nombre, dni);
+	@RequestMapping(value = "/getidloginusuario/{nombre}", method = RequestMethod.GET,headers="Accept=application/json")
+	public User getLoginc(@PathVariable String nombre) {
+		User user=userService.Login(nombre);
+		return user;
+	}
+	
+	  //ID CHOFER
+	@RequestMapping(value = "/getidloginpassword/{dni}", method = RequestMethod.GET,headers="Accept=application/json")
+	public User getLogin(@PathVariable String dni) {
+		User user=userService.Login2(dni);
 		return user;
 	}
 	
