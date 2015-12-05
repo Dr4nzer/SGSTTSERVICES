@@ -37,6 +37,12 @@ public class SpringServiceController {
 		return user;
 	}
 	
+	@RequestMapping(value = "/HoraSistema/", method = RequestMethod.GET,headers="Accept=application/json")
+	public User getHorasistema() {
+		User user=userService.getHora();
+		return user;
+	}
+	
 	  //ORIGEN Y DESTINO DEL SERVICIO
 	@RequestMapping(value = "/OrigenDestino/{id}", method = RequestMethod.GET,headers="Accept=application/json")
 	public User getOrigenDestino(@PathVariable int id) {
@@ -80,9 +86,35 @@ public class SpringServiceController {
 		return user;
 	}
 	
+	  //NICK ADMIN
+	@RequestMapping(value = "/nickadmin/", method = RequestMethod.GET,headers="Accept=application/json")
+	public User getnickadmin() {
+		User user=userService.getnickadmin();
+		return user;
+	}
+	
+	  //CLAVE ADMIN
+	@RequestMapping(value = "/claveadmin/", method = RequestMethod.GET,headers="Accept=application/json")
+	public User getclaveadmin() {
+		User user=userService.getclaveadmin();
+		return user;
+	}
+	
 	@RequestMapping(value="/lista/{id}",method = RequestMethod.GET,headers="Accept=application/json")
 	public List<User> getAllUsers(@PathVariable int id) {
 		List<User> users=userService.getAllUsers(id);
+		return users;
+	}
+	
+	@RequestMapping(value="/listall/",method = RequestMethod.GET,headers="Accept=application/json")
+	public List<User> getAllUsersadmin() {
+		List<User> users=userService.getAllUsersadmin();
+		return users;
+	}
+	
+	@RequestMapping(value="/listTipoServicio/",method = RequestMethod.GET,headers="Accept=application/json")
+	public List<User> getAllTipoServicio() {
+		List<User> users=userService.getAllTipoServicio();
 		return users;
 	}
 	
@@ -90,6 +122,13 @@ public class SpringServiceController {
 	@RequestMapping(value="/listaincidencias/",method = RequestMethod.GET,headers="Accept=application/json")
 	public List<User> getAllincidencias() {
 		List<User> users=userService.getAllincidencias();
+		return users;
+	}
+	
+	//LISTA ID INCIDENCIAS
+	@RequestMapping(value="/listaidincidencias/",method = RequestMethod.GET,headers="Accept=application/json")
+	public List<User> getAllidincidencias() {
+		List<User> users=userService.getAllidincidencias();
 		return users;
 	}
 	
@@ -118,6 +157,19 @@ public class SpringServiceController {
 	@RequestMapping(value = "/getidloginpassword/{dni}", method = RequestMethod.GET,headers="Accept=application/json")
 	public User getLogin(@PathVariable String dni) {
 		User user=userService.Login2(dni);
+		return user;
+	}
+	
+	  //ID CHOFER
+	@RequestMapping(value = "/getidloginsede/{dni}/x/{clave}/xz/{id}", method = RequestMethod.GET,headers="Accept=application/json")
+	public User getLogin(@PathVariable String dni,@PathVariable String clave,@PathVariable String id) {
+		User user=userService.Login3(dni,clave,id);
+		return user;
+	}
+	
+	@RequestMapping(value = "/getidsedechofer/{sede}", method = RequestMethod.GET,headers="Accept=application/json")
+	public User getidsedechofer(@PathVariable String sede) {
+		User user=userService.getidsedechofer(sede);
 		return user;
 	}
 	
@@ -184,9 +236,15 @@ public class SpringServiceController {
 		return user;
 	}
 	
-	@RequestMapping(value = "/getOrigendestino/{id}", method = RequestMethod.GET,headers="Accept=application/json")
-	public User getOrigendestino(@PathVariable String id) {
-		User user=userService.getOrigen(id);
+	@RequestMapping(value = "/getCoordenadas/{id}", method = RequestMethod.GET,headers="Accept=application/json")
+	public User getCoordenadas(@PathVariable String id) {
+		User user=userService.getCoordenadas(id);
+		return user;
+	}
+	
+	@RequestMapping(value = "/getiddestino/{id}", method = RequestMethod.GET,headers="Accept=application/json")
+	public User getiddestino(@PathVariable String id) {
+		User user=userService.getiddestino(id);
 		return user;
 	}
 	
@@ -195,6 +253,260 @@ public class SpringServiceController {
 		List<User> users=userService.getDescripcion();
 		return users;
 	}
+	
+	@RequestMapping(value="/listatrasl",method = RequestMethod.GET,headers="Accept=application/json")
+	public List<User> getlisttrasl() {
+		List<User> users=userService.getlisttrasl();
+		return users;
+	}
+	
+	@RequestMapping(value="/listasede",method = RequestMethod.GET,headers="Accept=application/json")
+	public List<User> listasede() {
+		List<User> users=userService.listasede();
+		return users;
+	}
+	
+	@RequestMapping(value = "/getdatostrasl/{id}", method = RequestMethod.GET,headers="Accept=application/json")
+	public User getdatostrasl(@PathVariable String id) {
+		User user=userService.getdatostrasl(id);
+		return user;
+	}
+	
+	@RequestMapping(value = "/getdatochofer/{id}", method = RequestMethod.GET,headers="Accept=application/json")
+	public User getdatochofer(@PathVariable String id) {
+		User user=userService.getdatochofer(id);
+		return user;
+	}
+	
+	@RequestMapping(value = "/getdatosincidencia/{id}", method = RequestMethod.GET,headers="Accept=application/json")
+	public User getdatosincidencia(@PathVariable String id) {
+		User user=userService.getdatosincidencia(id);
+		return user;
+	}
+	
+	@RequestMapping(value = "/idtypeinc/{id}", method = RequestMethod.GET,headers="Accept=application/json")
+	public User idtipoincidencia(@PathVariable String id) {
+		User user=userService.idtipoincidencia(id);
+		return user;
+	}
+	
+	@RequestMapping(value = "/descripcionincidencia/{id}", method = RequestMethod.GET,headers="Accept=application/json")
+	public User descripcionincidencia(@PathVariable String id) {
+		User user=userService.descripcionincidencia(id);
+		return user;
+	}
+	
+	@RequestMapping(value = "/dniwhereid/{id}", method = RequestMethod.GET,headers="Accept=application/json")
+	public User dniwhereid(@PathVariable String id) {
+		User user=userService.dniwhereid(id);
+		return user;
+	}
+	
+	@RequestMapping(value = "/estadoid/{id}", method = RequestMethod.GET,headers="Accept=application/json")
+	public User idestado(@PathVariable String id) {
+		User user=userService.idestado(id);
+		return user;
+	}
+	
+	@RequestMapping(value = "/descripcionestado/{id}", method = RequestMethod.GET,headers="Accept=application/json")
+	public User descripcionestado(@PathVariable String id) {
+		User user=userService.descripcionestado(id);
+		return user;
+	}
+	
+	@RequestMapping(value = "/insertdatetimeorigen/{id}/in/{fecha}", method = RequestMethod.GET,headers="Accept=application/json")
+	public User Insertdatetimeorigen(@PathVariable  int id,@PathVariable String fecha) {
+		User user=userService.Insertdatetimeorigen(id,fecha);
+		return user;
+	}
+	
+	@RequestMapping(value = "/insertdatetimedestino/{id}/in/{fecha}", method = RequestMethod.GET,headers="Accept=application/json")
+	public User Insertdatetimedestino(@PathVariable  int id,@PathVariable String fecha) {
+		User user=userService.Insertdatetimedestino(id,fecha);
+		return user;
+	}
+	
+	@RequestMapping(value = "/insertcronometro/{id}/in/{tiempo}", method = RequestMethod.GET,headers="Accept=application/json")
+	public User Insertcronometro(@PathVariable  int id,@PathVariable String tiempo) {
+		User user=userService.Insertcronometro(id,tiempo);
+		return user;
+	}
+
+	//Consultar Servicio Administrador  6/11/15 .......
+	
+	//Obtener todos los servicios 
+	@RequestMapping(value="/listserviceadmin",method = RequestMethod.GET,headers="Accept=application/json")
+	public List<User> getListAllServiceAdmin() {
+		List<User> users=userService.getListAllServiceAdmin();
+		return users;
+	}
+	
+	@RequestMapping(value="/listserviceadminP",method = RequestMethod.GET,headers="Accept=application/json")
+	public List<User> getListAllServiceAdminP() {
+		List<User> users=userService.getListAllServiceAdminP();
+		return users;
+	}
+	
+	//Obtener NumeroPersonas pasajeros Servicio
+	@RequestMapping(value = "/getNumPersonas/{id}", method = RequestMethod.GET,headers="Accept=application/json")
+	public User getNumPersonas(@PathVariable  String id) {
+		User user=userService.getNumPersonas(id);
+		return user;
+	}
+	
+	//Obtener Externalizado Servicio
+	@RequestMapping(value = "/getExternalizado/{id}", method = RequestMethod.GET,headers="Accept=application/json")
+	public User getExternalizado(@PathVariable  String id) {
+		User user=userService.getExternalizado(id);
+		return user;
+	}
+	
+	//Obtener Precio Servicio
+	@RequestMapping(value = "/getPrecioServicio/{id}", method = RequestMethod.GET,headers="Accept=application/json")
+	public User getPrecioServicio(@PathVariable  String id) {
+		User user=userService.getPrecioServicio(id);
+		return user;
+	}
+	
+	//Obtener Descuento de servicio
+	@RequestMapping(value = "/getDescuento/{id}", method = RequestMethod.GET,headers="Accept=application/json")
+	public User getDescuento(@PathVariable  String id) {
+		User user=userService.getDescuento(id);
+		return user;
+	}
+	
+	//Obtener Adicional de servicio
+	@RequestMapping(value = "/getAdicional/{id}", method = RequestMethod.GET,headers="Accept=application/json")
+	public User getAdicional(@PathVariable  String id) {
+		User user=userService.getAdicional(id);
+		return user;
+	}
+	
+	//Obtener Dias Viaje del servicio
+		@RequestMapping(value = "/getDiasViaje/{id}", method = RequestMethod.GET,headers="Accept=application/json")
+		public User getDiasViaje(@PathVariable  String id) {
+			User user=userService.getDiasViaje(id);
+			return user;
+	}
+	
+	//Obtener Estado del servicio
+		@RequestMapping(value = "/getEstadoServicio/{id}", method = RequestMethod.GET,headers="Accept=application/json")
+		public User getEstadoServicio(@PathVariable  String id) {
+			User user=userService.getEstadoServicio(id);
+			return user;
+	}
+		
+	//Obtener Fecha de Registro de servicio
+		@RequestMapping(value = "/getFechaRegistro/{id}", method = RequestMethod.GET,headers="Accept=application/json")
+		public User getFechaRegistro(@PathVariable  String id) {
+			User user=userService.getFechaRegistro(id);
+			return user;
+	}
+		
+	//Obtener idchofer de servicio
+		@RequestMapping(value = "/getidChofer/{id}", method = RequestMethod.GET,headers="Accept=application/json")
+		public User getidChofer(@PathVariable  String id) {
+			User user=userService.getidChofer(id);
+			return user;
+	}	
+	
+	//Obtener Nombre , Apellido de Chofer
+		@RequestMapping(value = "/getNombreApellidoChofer/{id}", method = RequestMethod.GET,headers="Accept=application/json")
+		public User getNombreApellidoChofer(@PathVariable  String id) {
+			User user=userService.getNombreApellidoChofer(id);
+			return user;
+	}	
+	
+	//Obtener idTrasladista de Servicio
+		@RequestMapping(value = "/getIdTrasladista/{id}", method = RequestMethod.GET,headers="Accept=application/json")
+		public User getIdTrasladista(@PathVariable  String id) {
+			User user=userService.getIdTrasladista(id);
+			return user;
+	}	
+	
+	//Obtener Nombre , Apellido de Trasladista
+		@RequestMapping(value = "/getNombreApellidoTrasladista/{id}", method = RequestMethod.GET,headers="Accept=application/json")
+		public User getNombreApellidoTrasladista(@PathVariable  String id) {
+			User user=userService.getNombreApellidoTrasladista(id);
+			return user;
+	}	
+	
+	//Obtener idvehiculo de servicio
+		@RequestMapping(value = "/getidvehiculo/{id}", method = RequestMethod.GET,headers="Accept=application/json")
+		public User getidvehiculo(@PathVariable  String id) {
+			User user=userService.getidvehiculo(id);
+			return user;
+	}	
+	
+	//Obtener Placa , Descripcion de Vehiculo
+		@RequestMapping(value = "/getPlacaDescripcionVehiculo/{id}", method = RequestMethod.GET,headers="Accept=application/json")
+		public User getPlacaDescripcionVehiculo(@PathVariable  String id) {
+			User user=userService.getPlacaDescripcionVehiculo(id);
+			return user;
+	}	
+	
+	//Obtener idVuelo de servicio_detalle
+		@RequestMapping(value = "/getIdVuelo/{id}", method = RequestMethod.GET,headers="Accept=application/json")
+		public User getIdVuelo(@PathVariable  String id) {
+			User user=userService.getIdVuelo(id);
+			return user;
+	}	
+	
+	//Obtener descripcion del vuelo 
+		@RequestMapping(value = "/getdescripcionvuelo/{id}", method = RequestMethod.GET,headers="Accept=application/json")
+		public User getdescripcionvuelo(@PathVariable  String id) {
+			User user=userService.getdescripcionvuelo(id);
+			return user;
+	}	
+		@RequestMapping(value = "/getdescripcionaerolinea/{id}", method = RequestMethod.GET,headers="Accept=application/json")
+		public User getdescripcionaerolinea(@PathVariable  String id) {
+			User user=userService.getdescripcionaerolinea(id);
+			return user;
+	}	
+	
+	//Detalles Vehiculo
+		//Obtener descripcion del vehiculo 
+		@RequestMapping(value = "/getdetallesvehiculo/{id}", method = RequestMethod.GET,headers="Accept=application/json")
+		public User getdetallesvehiculo(@PathVariable  String id) {
+			User user=userService.getdetallesvehiculo(id);
+			return user;
+	}	
+		//Obtener idSede del vehiculo 
+		@RequestMapping(value = "/getidsede/{id}", method = RequestMethod.GET,headers="Accept=application/json")
+		public User getidsede(@PathVariable  String id) {
+			User user=userService.getidsede(id);
+			return user;
+	}	
+		//Obtener descripcion sede del vehiculo 
+		@RequestMapping(value = "/getdescripcionsede/{id}", method = RequestMethod.GET,headers="Accept=application/json")
+		public User getdescripcionsede(@PathVariable  String id) {
+			User user=userService.getdescripcionsede(id);
+			return user;
+	}
+		//Obtener nombre tipo vehiculo 
+		@RequestMapping(value = "/getnombretipovehiculo/{id}", method = RequestMethod.GET,headers="Accept=application/json")
+		public User getnombretipovehiculo(@PathVariable  String id) {
+			User user=userService.getnombretipovehiculo(id);
+			return user;
+	}
+		//Obtener nombre marca 
+		@RequestMapping(value = "/getnombremarca/{id}", method = RequestMethod.GET,headers="Accept=application/json")
+		public User getnombremarca(@PathVariable  String id) {
+			User user=userService.getnombremarca(id);
+			return user;
+	}
+		//Obtener nombre modelo 
+		@RequestMapping(value = "/getnombremodelo/{id}", method = RequestMethod.GET,headers="Accept=application/json")
+		public User getnombremodelo(@PathVariable  String id) {
+			User user=userService.getnombremodelo(id);
+			return user;
+	}
+		@RequestMapping(value="/getAllincidenciasxfecha/{id}",method = RequestMethod.GET,headers="Accept=application/json")
+		public List<User> getAllincidenciasxfecha(@PathVariable String id) {
+			List<User> users=userService.getAllincidenciasxfecha(id);
+			return users;
+		}
+		
 }
 
 	

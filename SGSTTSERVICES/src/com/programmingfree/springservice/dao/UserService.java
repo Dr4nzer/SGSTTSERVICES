@@ -84,7 +84,7 @@ public class UserService {
 		List<User> users = new ArrayList<User>();
 		try {
 			PreparedStatement preparedStatement = connection.
-					prepareStatement("SELECT idservicio_detalle from servicio_detalle where idchofer=? and ESTADO=1 limit 15");
+					prepareStatement("SELECT idservicio_detalle from servicio_detalle where idchofer=? and ESTADO=1 ORDER BY fecha ASC ");
 			preparedStatement.setInt(1, userId);
 			ResultSet rs = preparedStatement.executeQuery();
 			while (rs.next()) {
@@ -100,7 +100,43 @@ public class UserService {
 		return users;
 	}
 	
+	public List<User> getAllUsersadmin() {
+		List<User> users = new ArrayList<User>();
+		try {
+			PreparedStatement preparedStatement = connection.
+					prepareStatement("SELECT idservicio_detalle from servicio_detalle limit 15");
+			ResultSet rs = preparedStatement.executeQuery();
+			while (rs.next()) {
+				User user = new User();
+
+				user.setFirstName(rs.getString("idservicio_detalle"));
+				users.add(user);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return users;
+	}
 	
+	public List<User> getAllTipoServicio() {
+		List<User> users = new ArrayList<User>();
+		try {
+			PreparedStatement preparedStatement = connection.
+					prepareStatement("SELECT descripcion from tipo_servicio limit 15");
+			ResultSet rs = preparedStatement.executeQuery();
+			while (rs.next()) {
+				User user = new User();
+
+				user.setFirstName(rs.getString("descripcion"));
+				users.add(user);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return users;
+	}
 	
 	public List<User> getAllincidencias() {
 		List<User> users = new ArrayList<User>();
@@ -113,6 +149,25 @@ public class UserService {
 
 				user.setFirstName(rs.getString("descripcion"));
 				user.setLastName(rs.getString("idtipo_incidencia"));
+				users.add(user);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return users;
+	}
+	
+	public List<User> getAllidincidencias() {
+		List<User> users = new ArrayList<User>();
+		try {
+			PreparedStatement preparedStatement = connection.
+					prepareStatement("SELECT idincidencia from incidencia limit 45");
+			ResultSet rs = preparedStatement.executeQuery();
+			while (rs.next()) {
+				User user = new User();
+
+				user.setFirstName(rs.getString("idincidencia"));
 				users.add(user);
 			}
 		} catch (SQLException e) {
@@ -163,6 +218,45 @@ public class UserService {
 		return user;
 	}
 	
+	public User getnickadmin() {
+		User user = new User();
+		try {
+			PreparedStatement preparedStatement = connection.
+					prepareStatement("SELECT NICK FROM USUARIO WHERE idPERFIL=1");
+			ResultSet rs = preparedStatement.executeQuery();
+			
+			if (rs.next()) {
+
+				user.setFirstName(rs.getString("NICK"));
+				
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return user;
+	}
+	
+	public User getclaveadmin() {
+		User user = new User();
+		try {
+			PreparedStatement preparedStatement = connection.
+					prepareStatement("SELECT CLAVE FROM USUARIO WHERE idPERFIL=1");
+			ResultSet rs = preparedStatement.executeQuery();
+			
+			if (rs.next()) {
+
+				user.setFirstName(rs.getString("CLAVE"));
+				
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return user;
+	}
+
+	
+	//Obtener Fecha de servicio_detalle
+	
 	public User getHoraFecha(int userId){
 		User user = new User();
 		try{
@@ -200,6 +294,8 @@ public class UserService {
 		}
 		return user;
 	}
+
+	//Obtiene descripcion del servicio (idservicio)
 	
 	public User getOrigenDestino(int userId){
 		User user = new User();
@@ -443,7 +539,7 @@ public class UserService {
 		User user = new User();
 		try{
 					PreparedStatement preparedStatement = connection
-					.prepareStatement("select idchofer from chofer where nombre=?");
+					.prepareStatement("select idchofer from chofer where dni=?");
 					preparedStatement.setString(1,nombre);
 					
 					ResultSet rs = preparedStatement.executeQuery();
@@ -462,8 +558,28 @@ public class UserService {
 		User user = new User();
 		try{
 					PreparedStatement preparedStatement = connection
-					.prepareStatement("select idchofer from chofer where dni=?");
+					.prepareStatement("select idchofer from chofer where clave=?");
 					preparedStatement.setString(1,dni);
+					ResultSet rs = preparedStatement.executeQuery();
+					
+					if(rs.next()){
+						
+						user.setUserid(rs.getInt("idchofer"));		
+					}
+				} catch(SQLException e){
+					e.printStackTrace();
+				}
+		return user;
+	}
+	
+	public User Login3(String dni ,String clave ,String id){
+		User user = new User();
+		try{
+					PreparedStatement preparedStatement = connection
+					.prepareStatement("select idchofer from chofer where dni=? and clave=? and idsede=?");
+					preparedStatement.setString(1,dni);
+					preparedStatement.setString(2,clave);
+					preparedStatement.setString(3,id);
 					ResultSet rs = preparedStatement.executeQuery();
 					
 					if(rs.next()){
@@ -568,18 +684,39 @@ public class UserService {
 		return user;
 	}
 	
-	public User getOrigen(String id){
+	//Obtener COORDENADAS del destino del servicio
+	public User getCoordenadas(String id){
 		User user = new User();
 		try{
 			PreparedStatement preparedStatement = connection.
-					prepareStatement("SELECT Origen , destino from servicio where descripcion=?");
+					prepareStatement("SELECT LATITUD , LONGITUD from Destinos where idDestinos=?");
 			preparedStatement.setString(1, id);
 			ResultSet rs = preparedStatement.executeQuery();
 			
 			if(rs.next()){
 				
-				user.setFirstName(rs.getString("origen"));
-				user.setLastName(rs.getString("destino"));		
+				user.setFirstName(rs.getString("LATITUD"));
+				user.setLastName(rs.getString("LONGITUD"));		
+			}
+		} catch(SQLException e){
+			e.printStackTrace();
+		}
+		return user;
+	}
+	
+	//Obtener iddestino de destinos 
+	public User getiddestino(String id){
+		User user = new User();
+		try{
+			PreparedStatement preparedStatement = connection.
+					prepareStatement("SELECT Destinos_idDestinos from servicio_destinos where servicio_idservicio=?");
+			preparedStatement.setString(1, id);
+			ResultSet rs = preparedStatement.executeQuery();
+			
+			if(rs.next()){
+				
+				user.setFirstName(rs.getString("Destinos_idDestinos"));
+				
 			}
 		} catch(SQLException e){
 			e.printStackTrace();
@@ -605,6 +742,870 @@ public class UserService {
 
 		return users;
 	}
+	
+	public List<User> getlisttrasl() {
+		List<User> users = new ArrayList<User>();
+		try {
+			PreparedStatement preparedStatement = connection.
+					prepareStatement("SELECT idtrasladista FROM trasladista ");
+			ResultSet rs = preparedStatement.executeQuery();
+			while (rs.next()) {
+				User user = new User();
+
+				user.setFirstName(rs.getString("idtrasladista"));
+				users.add(user);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return users;
+	}
+	public List<User> listasede() {
+		List<User> users = new ArrayList<User>();
+		try {
+			PreparedStatement preparedStatement = connection.
+					prepareStatement("SELECT descripcion FROM sede ");
+			ResultSet rs = preparedStatement.executeQuery();
+			while (rs.next()) {
+				User user = new User();
+
+				user.setFirstName(rs.getString("descripcion"));
+				users.add(user);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return users;
+	}
+	public User getdatostrasl(String id){
+		User user = new User();
+		try{
+			PreparedStatement preparedStatement = connection.
+					prepareStatement("SELECT nombre,apellido,direccion,correo,telefono,celular from trasladista where idtrasladista=?");
+			preparedStatement.setString(1, id);
+			ResultSet rs = preparedStatement.executeQuery();
+			
+			if(rs.next()){
+				
+				user.setFirstName(rs.getString("nombre"));
+				user.setLastName(rs.getString("apellido"));
+				user.setEmail(rs.getString("direccion"));
+				user.settelf(rs.getString("correo"));
+				user.setcell(rs.getString("telefono"));
+				user.setdirecc(rs.getString("celular"));
+				
+			}
+		} catch(SQLException e){
+			e.printStackTrace();
+		}
+		return user;
+	}
+	
+	public User getdatochofer(String id){
+		User user = new User();
+		try{
+			PreparedStatement preparedStatement = connection.
+					prepareStatement("SELECT nombre,apellido,categoria,S.descripcion as sedec from chofer a inner join sede S on S.idsede=a.idsede  where idchofer=?");
+			preparedStatement.setString(1, id);
+			ResultSet rs = preparedStatement.executeQuery();
+			
+			if(rs.next()){
+				
+				user.setFirstName(rs.getString("nombre"));
+				user.setLastName(rs.getString("apellido"));
+				user.setEmail(rs.getString("categoria"));
+				user.settelf(rs.getString("sedec"));
+				
+			}
+		} catch(SQLException e){
+			e.printStackTrace();
+		}
+		return user;
+	}
+	
+	public User getdatosincidencia(String id){
+		User user = new User();
+		try{
+			PreparedStatement preparedStatement = connection.
+					prepareStatement("SELECT descripcion,idservicio_detalle,FECHA_REGISTRO from incidencia where idincidencia=?");
+			preparedStatement.setString(1, id);
+			ResultSet rs = preparedStatement.executeQuery();
+			
+			if(rs.next()){
+				
+				user.setFirstName(rs.getString("descripcion"));
+				user.setLastName(rs.getString("idservicio_detalle"));
+				user.setEmail(rs.getString("FECHA_REGISTRO"));
+				
+			}
+		} catch(SQLException e){
+			e.printStackTrace();
+		}
+		return user;
+	}
+	
+	public User idtipoincidencia(String id){
+		User user = new User();
+		try{
+			PreparedStatement preparedStatement = connection.
+					prepareStatement("SELECT idtipo_incidencia from incidencia where idincidencia=?");
+			preparedStatement.setString(1, id);
+			ResultSet rs = preparedStatement.executeQuery();
+			
+			if(rs.next()){
+				
+				user.setFirstName(rs.getString("idtipo_incidencia"));
+
+				
+			}
+		} catch(SQLException e){
+			e.printStackTrace();
+		}
+		return user;
+	}
+	
+	public User descripcionincidencia(String id){
+		User user = new User();
+		try{
+			PreparedStatement preparedStatement = connection.
+					prepareStatement("SELECT descripcion from tipo_incidencia where idtipo_incidencia=?");
+			preparedStatement.setString(1, id);
+			ResultSet rs = preparedStatement.executeQuery();
+			
+			if(rs.next()){
+				
+				user.setFirstName(rs.getString("descripcion"));
+
+				
+			}
+		} catch(SQLException e){
+			e.printStackTrace();
+		}
+		return user;
+	}
+	
+	
+	public User idestado(String id){
+		User user = new User();
+		try{
+			PreparedStatement preparedStatement = connection.
+					prepareStatement("SELECT idestado_incidencia from incidencia where idincidencia=?");
+			preparedStatement.setString(1, id);
+			ResultSet rs = preparedStatement.executeQuery();
+			
+			if(rs.next()){
+				
+				user.setFirstName(rs.getString("idestado_incidencia"));
+
+				
+			}
+		} catch(SQLException e){
+			e.printStackTrace();
+		}
+		return user;
+	}
+	
+	public User descripcionestado(String id){
+		User user = new User();
+		try{
+			PreparedStatement preparedStatement = connection.
+					prepareStatement("SELECT descripcion from estado_incidencia where idestado_incidencia=?");
+			preparedStatement.setString(1, id);
+			ResultSet rs = preparedStatement.executeQuery();
+			
+			if(rs.next()){
+				
+				user.setFirstName(rs.getString("descripcion"));
+
+				
+			}
+		} catch(SQLException e){
+			e.printStackTrace();
+		}
+		return user;
+	}
+	
+	public User Insertdatetimeorigen(int id,String fecha) {
+		
+		User user = new User();
+		try{
+					PreparedStatement preparedStatement = connection
+					.prepareStatement("UPDATE servicio SET DateTimeOrigen=? WHERE idservicio=?");
+					
+					
+					preparedStatement.setString(1, fecha);
+					preparedStatement.setInt(2, id);
+					 preparedStatement.executeUpdate();
+					
+					} catch (SQLException e) {
+					e.printStackTrace();
+					}
+		return user;
+	}
+	
+	public User Insertdatetimedestino(int id,String fecha) {
+		
+		User user = new User();
+		try{
+					PreparedStatement preparedStatement = connection
+					.prepareStatement("UPDATE servicio SET DateTimeDestino=? WHERE idservicio=?");
+					
+					
+					preparedStatement.setString(1, fecha);
+					preparedStatement.setInt(2, id);
+					 preparedStatement.executeUpdate();
+					
+					} catch (SQLException e) {
+					e.printStackTrace();
+					}
+		return user;
+	}
+
+	public User Insertcronometro(int id,String tiempo) {
+		
+		User user = new User();
+		try{
+					PreparedStatement preparedStatement = connection
+					.prepareStatement("UPDATE servicio SET TiempoServicio=? WHERE idservicio=?");
+					
+					
+					preparedStatement.setString(1, tiempo);
+					preparedStatement.setInt(2, id);
+					 preparedStatement.executeUpdate();
+					
+					} catch (SQLException e) {
+					e.printStackTrace();
+					}
+		return user;
+	}
+	
+	public User getHora(){
+		User user = new User();
+		try{
+			PreparedStatement preparedStatement = connection.
+					prepareStatement("SELECT curtime() as Time_sistema");
+			ResultSet rs = preparedStatement.executeQuery();
+			
+			if(rs.next()){
+				
+				user.setFirstName(rs.getString("Time_sistema"));
+				
+			}
+		} catch(SQLException e){
+			e.printStackTrace();
+		}
+		return user;
+	}
+	
+	public User dniwhereid(String id){
+		User user = new User();
+		try{
+			PreparedStatement preparedStatement = connection.
+					prepareStatement("SELECT dni from chofer where idchofer=?");
+			preparedStatement.setString(1, id);
+			ResultSet rs = preparedStatement.executeQuery();
+			
+			if(rs.next()){
+				
+				user.setFirstName(rs.getString("dni"));
+
+				
+			}
+		} catch(SQLException e){
+			e.printStackTrace();
+		}
+		return user;
+	}
+	
+	//Consultar Servicio Administrador  6/11/15 .......
+	
+	//Obtener todos los servicios  
+	
+	public List<User> getListAllServiceAdminP() {
+		List<User> users = new ArrayList<User>();
+		try {
+			PreparedStatement preparedStatement = connection.
+					prepareStatement("SELECT idservicio_detalle FROM servicio_detalle where estado_SERVICIO='Pendiente'");
+			ResultSet rs = preparedStatement.executeQuery();
+			while (rs.next()) {
+				User user = new User();
+
+				user.setFirstName(rs.getString("idservicio_detalle"));
+				users.add(user);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return users;
+	}
+	
+	public List<User> getListAllServiceAdmin() {
+		List<User> users = new ArrayList<User>();
+		try {
+			PreparedStatement preparedStatement = connection.
+					prepareStatement("SELECT idservicio_detalle FROM servicio_detalle where estado_SERVICIO='Finalizado'");
+			ResultSet rs = preparedStatement.executeQuery();
+			while (rs.next()) {
+				User user = new User();
+
+				user.setFirstName(rs.getString("idservicio_detalle"));
+				users.add(user);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return users;
+	}
+	
+	//Obtener NumeroPersonas de servicio_detalle (idservicio_detalle)
+	
+	public User getNumPersonas(String id){
+		User user = new User();
+		try{
+			PreparedStatement preparedStatement = connection.
+					prepareStatement("SELECT num_personas from servicio_detalle where idservicio_detalle=?");
+			preparedStatement.setString(1, id);
+			ResultSet rs = preparedStatement.executeQuery();
+			
+			if(rs.next()){
+				
+				user.setFirstName(rs.getString("num_personas"));
+
+				
+			}
+		} catch(SQLException e){
+			e.printStackTrace();
+		}
+		return user;
+	}
+	
+	//Obtener si es externalizado de servicio_detalle(idservicio_detalle)
+	
+	public User getExternalizado(String id){
+		User user = new User();
+		try{
+			PreparedStatement preparedStatement = connection.
+					prepareStatement("SELECT externalizado from servicio_detalle where idservicio_detalle=?");
+			preparedStatement.setString(1, id);
+			ResultSet rs = preparedStatement.executeQuery();
+			
+			if(rs.next()){
+				
+				user.setFirstName(rs.getString("externalizado"));
+
+				
+			}
+		} catch(SQLException e){
+			e.printStackTrace();
+		}
+		return user;
+	}
+	
+	//Obtener Precio Servicio de servicio_detalle(idservicio_detalle)
+	
+	public User getPrecioServicio(String id){
+		User user = new User();
+		try{
+			PreparedStatement preparedStatement = connection.
+					prepareStatement("SELECT PRECIO_SERVICIO from servicio_detalle where idservicio_detalle=?");
+			preparedStatement.setString(1, id);
+			ResultSet rs = preparedStatement.executeQuery();
+			
+			if(rs.next()){
+				
+				user.setFirstName(rs.getString("PRECIO_SERVICIO"));
+
+				
+			}
+		} catch(SQLException e){
+			e.printStackTrace();
+		}
+		return user;
+	}
+
+	//Obtener Descuento de servicio_detalle(idservicio_detalle)
+	
+	public User getDescuento(String id){
+		User user = new User();
+		try{
+			PreparedStatement preparedStatement = connection.
+					prepareStatement("SELECT DESCUENTO from servicio_detalle where idservicio_detalle=?");
+			preparedStatement.setString(1, id);
+			ResultSet rs = preparedStatement.executeQuery();
+			
+			if(rs.next()){
+				
+				user.setFirstName(rs.getString("DESCUENTO"));
+
+				
+			}
+		} catch(SQLException e){
+			e.printStackTrace();
+		}
+		return user;
+	}
+	
+	//Obtener Adicional de servicio_detalle(idservicio_Detalle)
+	
+	public User getAdicional(String id){
+		User user = new User();
+		try{
+			PreparedStatement preparedStatement = connection.
+					prepareStatement("SELECT ADICIONAL from servicio_detalle where idservicio_detalle=?");
+			preparedStatement.setString(1, id);
+			ResultSet rs = preparedStatement.executeQuery();
+			
+			if(rs.next()){
+				
+				user.setFirstName(rs.getString("ADICIONAL"));
+
+				
+			}
+		} catch(SQLException e){
+			e.printStackTrace();
+		}
+		return user;
+	}
+	
+	//Obtener Dias Viaje de servicio_detalle(idservicio_detalle)
+	
+	public User getDiasViaje(String id){
+		User user = new User();
+		try{
+			PreparedStatement preparedStatement = connection.
+					prepareStatement("SELECT DIAS_VIAJE from servicio_detalle where idservicio_detalle=?");
+			preparedStatement.setString(1, id);
+			ResultSet rs = preparedStatement.executeQuery();
+			
+			if(rs.next()){
+				
+				user.setFirstName(rs.getString("DIAS_VIAJE"));
+
+				
+			}
+		} catch(SQLException e){
+			e.printStackTrace();
+		}
+		return user;
+	}
+	
+	//Obtener Estado del servicio de servicio_detalle(idservicio_detalle)
+	
+	public User getEstadoServicio(String id){
+		User user = new User();
+		try{
+			PreparedStatement preparedStatement = connection.
+					prepareStatement("SELECT ESTADO_SERVICIO from servicio_detalle where idservicio_detalle=?");
+			preparedStatement.setString(1, id);
+			ResultSet rs = preparedStatement.executeQuery();
+			
+			if(rs.next()){
+				
+				user.setFirstName(rs.getString("ESTADO_SERVICIO"));
+
+				
+			}
+		} catch(SQLException e){
+			e.printStackTrace();
+		}
+		return user;
+	}
+	
+	//Obtener Fecha de Registro de servicio_detalle(idServicio_detalle)
+	
+	public User getFechaRegistro(String id){
+		User user = new User();
+		try{
+			PreparedStatement preparedStatement = connection.
+					prepareStatement("SELECT FECHA_REGISTRO from servicio_detalle where idservicio_detalle=?");
+			preparedStatement.setString(1, id);
+			ResultSet rs = preparedStatement.executeQuery();
+			
+			if(rs.next()){
+				
+				user.setFirstName(rs.getString("FECHA_REGISTRO"));
+
+				
+			}
+		} catch(SQLException e){
+			e.printStackTrace();
+		}
+		return user;
+	}
+	
+	//Obtener idchofer de servicio_detalle(idServicio_detalle)
+	
+	public User getidChofer(String id){
+		User user = new User();
+		try{
+			PreparedStatement preparedStatement = connection.
+					prepareStatement("SELECT idchofer from servicio_detalle where idservicio_detalle=?");
+			preparedStatement.setString(1, id);
+			ResultSet rs = preparedStatement.executeQuery();
+			
+			if(rs.next()){
+				
+				user.setFirstName(rs.getString("idchofer"));
+
+				
+			}
+		} catch(SQLException e){
+			e.printStackTrace();
+		}
+		return user;
+	}
+	
+	//Obtener Nombre , Apellido de Chofer(idchofer)
+	
+	public User getNombreApellidoChofer(String id){
+		User user = new User();
+		try{
+			PreparedStatement preparedStatement = connection.
+					prepareStatement("SELECT nombre , apellido from Chofer where idchofer=?");
+			preparedStatement.setString(1, id);
+			ResultSet rs = preparedStatement.executeQuery();
+			
+			if(rs.next()){
+				
+				user.setFirstName(rs.getString("nombre"));
+				user.setLastName(rs.getString("apellido"));
+
+					
+			}
+		} catch(SQLException e){
+			e.printStackTrace();
+		}
+		return user;
+	}
+	
+	//Obtener idTrasladista de Servicio_detalle(idservicio_detalle)
+	
+	public User getIdTrasladista(String id){
+		User user = new User();
+		try{
+			PreparedStatement preparedStatement = connection.
+					prepareStatement("SELECT idtrasladista from servicio_detalle where idservicio_detalle=?");
+			preparedStatement.setString(1, id);
+			ResultSet rs = preparedStatement.executeQuery();
+			
+			if(rs.next()){
+				
+				user.setFirstName(rs.getString("idtrasladista"));
+			
+			}
+		} catch(SQLException e){
+			e.printStackTrace();
+		}
+		return user;
+	}
+	
+	//Obtener Nombre , Apellido de Trasladista(idtrasladista)
+	
+	public User getNombreApellidoTrasladista(String id){
+		User user = new User();
+		try{
+			PreparedStatement preparedStatement = connection.
+					prepareStatement("SELECT nombre , apellido from trasladista where idtrasladista=?");
+			preparedStatement.setString(1, id);
+			ResultSet rs = preparedStatement.executeQuery();
+			
+			if(rs.next()){
+				
+				user.setFirstName(rs.getString("nombre"));
+				user.setLastName(rs.getString("apellido"));
+
+				
+			}
+		} catch(SQLException e){
+			e.printStackTrace();
+		}
+		return user;
+	}
+	
+	//Obtener idvehiculo de servicio_Detalle(idservicio_detalle)
+	
+	public User getidvehiculo(String id){
+		User user = new User();
+		try{
+			PreparedStatement preparedStatement = connection.
+					prepareStatement("SELECT idvehiculo from servicio_detalle where idservicio_detalle=?");
+			preparedStatement.setString(1, id);
+			ResultSet rs = preparedStatement.executeQuery();
+			
+			if(rs.next()){
+				
+				user.setFirstName(rs.getString("idvehiculo"));
+
+				
+			}
+		} catch(SQLException e){
+			e.printStackTrace();
+		}
+		return user;
+	}
+	
+	//Obtener Placa , Descripcion de Vehiculo(idVehiculo)
+	
+	public User getPlacaDescripcionVehiculo(String id){
+		User user = new User();
+		try{
+			PreparedStatement preparedStatement = connection.
+					prepareStatement("SELECT descripcion , placa from vehiculo where idvehiculo=?");
+			preparedStatement.setString(1, id);
+			ResultSet rs = preparedStatement.executeQuery();
+			
+			if(rs.next()){
+				
+				user.setFirstName(rs.getString("descripcion"));
+				user.setLastName(rs.getString("placa"));
+
+				
+			}
+		} catch(SQLException e){
+			e.printStackTrace();
+		}
+		return user;
+	}
+	
+	//Obtener idVuelo de servicio_detalle(idservicio)
+	
+	public User getIdVuelo(String id){
+		User user = new User();
+		try{
+			PreparedStatement preparedStatement = connection.
+					prepareStatement("SELECT idvuelo from servicio_detalle where idservicio_detalle=?");
+			preparedStatement.setString(1, id);
+			ResultSet rs = preparedStatement.executeQuery();
+			
+			if(rs.next()){
+				
+				user.setFirstName(rs.getString("idvuelo"));
+
+				
+			}
+		} catch(SQLException e){
+			e.printStackTrace();
+		}
+		return user;
+	}
+	
+	//Obtener descripcion del vuelo 
+	
+	public User getdescripcionvuelo(String id){
+		User user = new User();
+		try{
+			PreparedStatement preparedStatement = connection.
+					prepareStatement("SELECT descripcion,origen,destino,horario,idaerolinea from vuelo where idvuelo=?");
+			preparedStatement.setString(1, id);
+			ResultSet rs = preparedStatement.executeQuery();
+			
+			if(rs.next()){
+				
+				user.setFirstName(rs.getString("descripcion"));
+				user.setdirecc(rs.getString("origen"));
+				user.setText(rs.getString("destino"));
+				user.setLastName(rs.getString("horario"));
+				user.setEmail(rs.getString("idaerolinea"));
+				
+			}
+		} catch(SQLException e){
+			e.printStackTrace();
+		}
+		return user;
+	}
+	
+	public User getdescripcionaerolinea(String id){
+		User user = new User();
+		try{
+			PreparedStatement preparedStatement = connection.
+					prepareStatement("SELECT descripcion from aerolinea where idaerolinea=?");
+			preparedStatement.setString(1, id);
+			ResultSet rs = preparedStatement.executeQuery();
+			
+			if(rs.next()){
+				
+				user.setFirstName(rs.getString("descripcion"));
+				
+			}
+		} catch(SQLException e){
+			e.printStackTrace();
+		}
+		return user;
+	}
+	
+	
+	//DETALLES DEL VEHICULO
+	
+	//Obtener descripcion vehiculo
+	
+	public User getdetallesvehiculo(String id){
+		User user = new User();
+		try{
+			PreparedStatement preparedStatement = connection.
+					prepareStatement("SELECT marca_idmarca,idtipo_vehiculo,descripcion , placa , año_fabricacion ,capacidad_max , color  from vehiculo where idvehiculo=?");
+			preparedStatement.setString(1, id);
+			ResultSet rs = preparedStatement.executeQuery();
+			
+			if(rs.next()){
+				
+				user.setFirstName(rs.getString("descripcion"));
+				user.setLastName(rs.getString("placa"));
+				user.setcell(rs.getString("año_fabricacion"));
+				user.setdirecc(rs.getString("capacidad_max"));
+				user.setEmail(rs.getString("color"));
+				user.settelf(rs.getString("idtipo_vehiculo"));
+				user.setText(rs.getString("marca_idmarca"));
+			}
+		} catch(SQLException e){
+			e.printStackTrace();
+		}
+		return user;
+	}
+	
+	//Obtener IDSEDE vehiculo
+	public User getidsede(String id){
+		User user = new User();
+		try{
+			PreparedStatement preparedStatement = connection.
+					prepareStatement("SELECT idSede  from vehiculo where idvehiculo=?");
+			preparedStatement.setString(1, id);
+			ResultSet rs = preparedStatement.executeQuery();
+			
+			if(rs.next()){
+				
+				user.setFirstName(rs.getString("idSede"));
+				
+			}
+		} catch(SQLException e){
+			e.printStackTrace();
+		}
+		return user;
+	}
+	
+	public User getidsedechofer(String sede){
+		User user = new User();
+		try{
+			PreparedStatement preparedStatement = connection.
+					prepareStatement("SELECT idSede  from sede where descripcion=?");
+			preparedStatement.setString(1, sede);
+			ResultSet rs = preparedStatement.executeQuery();
+			
+			if(rs.next()){
+				
+				user.setFirstName(rs.getString("idSede"));
+				
+			}
+		} catch(SQLException e){
+			e.printStackTrace();
+		}
+		return user;
+	}
+	
+	//Obtener descripcion sede
+	public User getdescripcionsede(String id){
+		User user = new User();
+		try{
+			PreparedStatement preparedStatement = connection.
+					prepareStatement("SELECT descripcion from Sede where idSede=?");
+			preparedStatement.setString(1, id);
+			ResultSet rs = preparedStatement.executeQuery();
+			
+			if(rs.next()){
+				
+				user.setFirstName(rs.getString("descripcion"));
+				
+			}
+		} catch(SQLException e){
+			e.printStackTrace();
+		}
+		return user;
+	}
+	
+	//Obtener nombre tipovehiculo
+	public User getnombretipovehiculo(String id){
+		User user = new User();
+		try{
+			PreparedStatement preparedStatement = connection.
+					prepareStatement("SELECT nombre from tipo_vehiculo where idtipo_vehiculo=?");
+			preparedStatement.setString(1, id);
+			ResultSet rs = preparedStatement.executeQuery();
+			
+			if(rs.next()){
+				
+				user.setFirstName(rs.getString("nombre"));
+				
+			}
+		} catch(SQLException e){
+			e.printStackTrace();
+		}
+		return user;
+	}
+	
+	//Obtener nombre marca 
+	public User getnombremarca(String id){
+		User user = new User();
+		try{
+			PreparedStatement preparedStatement = connection.
+					prepareStatement("SELECT nombreMarca from marca where idmarca=?");
+			preparedStatement.setString(1, id);
+			ResultSet rs = preparedStatement.executeQuery();
+			
+			if(rs.next()){
+				
+				user.setFirstName(rs.getString("nombreMarca"));
+				
+			}
+		} catch(SQLException e){
+			e.printStackTrace();
+		}
+		return user;
+	}
+	
+	//Obtener nombre modelo
+	public User getnombremodelo(String id){
+		User user = new User();
+		try{
+			PreparedStatement preparedStatement = connection.
+					prepareStatement("SELECT nombreModelo from modelo where marca_idmarca=?");
+			preparedStatement.setString(1, id);
+			ResultSet rs = preparedStatement.executeQuery();
+			
+			if(rs.next()){
+				
+				user.setFirstName(rs.getString("nombreModelo"));
+				
+			}
+		} catch(SQLException e){
+			e.printStackTrace();
+		}
+		return user;
+	}
+	
+	//Obtener idincidencia x fecha de incidencia
+	public List<User> getAllincidenciasxfecha(String userId) {
+		List<User> users = new ArrayList<User>();
+		try {
+			PreparedStatement preparedStatement = connection.
+					prepareStatement("select idincidencia from incidencia where FECHA_REGISTRO=?");
+			preparedStatement.setString(1,userId);
+			ResultSet rs = preparedStatement.executeQuery();
+			while (rs.next()) {
+				User user = new User();
+
+				user.setFirstName(rs.getString("idincidencia"));
+				users.add(user);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return users;
+	}
+	
 }
 
 
