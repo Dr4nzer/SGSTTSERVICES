@@ -222,7 +222,7 @@ public class UserService {
 		User user = new User();
 		try {
 			PreparedStatement preparedStatement = connection.
-					prepareStatement("SELECT NICK FROM USUARIO WHERE idPERFIL=1");
+					prepareStatement("SELECT NICK FROM usuario WHERE idPERFIL=1");
 			ResultSet rs = preparedStatement.executeQuery();
 			
 			if (rs.next()) {
@@ -240,7 +240,7 @@ public class UserService {
 		User user = new User();
 		try {
 			PreparedStatement preparedStatement = connection.
-					prepareStatement("SELECT CLAVE FROM USUARIO WHERE idPERFIL=1");
+					prepareStatement("SELECT CLAVE FROM usuario WHERE idPERFIL=1");
 			ResultSet rs = preparedStatement.executeQuery();
 			
 			if (rs.next()) {
