@@ -218,40 +218,47 @@ public class UserService {
 		return user;
 	}
 	
-	public User getnickadmin() {
-		User user = new User();
-		try {
-			PreparedStatement preparedStatement = connection.
-					prepareStatement("SELECT NICK FROM usuario WHERE idPERFIL=1");
-			ResultSet rs = preparedStatement.executeQuery();
-			
-			if (rs.next()) {
-
-				user.setFirstName(rs.getString("NICK"));
+	public User getnickadmin(String obj,String obj2,String obj3) {
+			User user = new User();
+			try{
+				PreparedStatement preparedStatement = connection.
+						prepareStatement("SELECT idusuario FROM usuario WHERE idPERFIL=1 and nick=? and idsede=? and clave=?");
+				preparedStatement.setString(1, obj);
+				preparedStatement.setString(2, obj2);
+				preparedStatement.setString(3, obj3);
+				ResultSet rs = preparedStatement.executeQuery();
 				
-			}
+				if(rs.next()){
+					
+					user.setUserid(rs.getInt("idusuario"));
+					
+				}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return user;
 	}
 	
-	public User getclaveadmin() {
+
+	
+	public User getclaveadmin(String obj,String obj2) {
 		User user = new User();
-		try {
+		try{
 			PreparedStatement preparedStatement = connection.
-					prepareStatement("SELECT CLAVE FROM usuario WHERE idPERFIL=1");
+					prepareStatement("SELECT idusuario FROM usuario WHERE idPERFIL=1 and clave=? and idsede=?");
+			preparedStatement.setString(1, obj);
+			preparedStatement.setString(2, obj2);
 			ResultSet rs = preparedStatement.executeQuery();
 			
-			if (rs.next()) {
-
-				user.setFirstName(rs.getString("CLAVE"));
+			if(rs.next()){
+				
+				user.setFirstName(rs.getString("idusuario"));
 				
 			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return user;
+	} catch (SQLException e) {
+		e.printStackTrace();
+	}
+	return user;
 	}
 
 	
@@ -337,6 +344,25 @@ public class UserService {
 		return user;
 	}
 	
+	public User getcuenta(int userId){
+		User user = new User();
+		try{
+			PreparedStatement preparedStatement = connection.
+					prepareStatement("SELECT cuenta from servicio_detalle where idservicio_detalle=?");
+			preparedStatement.setInt(1, userId);
+			ResultSet rs = preparedStatement.executeQuery();
+			
+			if(rs.next()){
+				
+				user.setFirstName(rs.getString("cuenta"));
+				
+			}
+		} catch(SQLException e){
+			e.printStackTrace();
+		}
+		return user;
+	}
+	
 	public User getDetalleservicio(int userId){
 		User user = new User();
 		try{
@@ -398,7 +424,7 @@ public class UserService {
 		User user = new User();
 		try{
 			PreparedStatement preparedStatement = connection.
-					prepareStatement("SELECT PAX from File where idFile=?");
+					prepareStatement("SELECT PAX from file where idFile=?");
 			preparedStatement.setInt(1, userId);
 			ResultSet rs = preparedStatement.executeQuery();
 			
@@ -414,6 +440,25 @@ public class UserService {
 		return user;
 	}
 	
+	public User getpaxsd(int userId){
+		User user = new User();
+		try{
+			PreparedStatement preparedStatement = connection.
+					prepareStatement("SELECT pax from servicio_detalle where idservicio_detalle=?");
+			preparedStatement.setInt(1, userId);
+			ResultSet rs = preparedStatement.executeQuery();
+			
+			if(rs.next()){
+				
+				user.setFirstName(rs.getString("pax"));
+		
+				
+			}
+		} catch(SQLException e){
+			e.printStackTrace();
+		}
+		return user;
+	}
 	
 	public User getidPax(int userId){
 		User user = new User();
@@ -532,15 +577,34 @@ public class UserService {
 					}
 		return user;
 	}
-
+	
+	public User UpdateCostos(String serv,String desc,String ad,String id){
+		
+			User user = new User();
+			try{
+				PreparedStatement preparedStatement = connection.
+						prepareStatement("UPDATE servicio_detalle SET precio_servicio=? , descuento=?,adicional=? WHERE idservicio_detalle=?");
+				preparedStatement.setString(1, serv);
+				preparedStatement.setString(2, desc);
+				preparedStatement.setString(3,ad);
+				preparedStatement.setString(4, id);
+				 preparedStatement.executeUpdate();
+			} catch(SQLException e){
+				e.printStackTrace();
+			}
+			return user;
+		
+	}
 //FALTA COMPLETAR LOGIN------------------------------------------------------------------------------------------
 	
-	public User Login(String nombre){
+	public User Login(String nombre,String clave,String sede){
 		User user = new User();
 		try{
 					PreparedStatement preparedStatement = connection
-					.prepareStatement("select idchofer from chofer where dni=?");
+					.prepareStatement("select idchofer from chofer where dni=? and clave=? and idsede=?");
 					preparedStatement.setString(1,nombre);
+					preparedStatement.setString(2,clave);
+					preparedStatement.setString(3,sede);
 					
 					ResultSet rs = preparedStatement.executeQuery();
 					
@@ -594,11 +658,11 @@ public class UserService {
 
 //INSERTAR INCIDENCIAS-----------------------------------------------------------------------------------------------
 	
-	public User Insertincidencia(int idinc,String desc,String idestadoinc,String idtipoinc,String idserv,String fecha,String fecha2){
+	public User Insertincidencia(int idinc,String desc,String idestadoinc,String idtipoinc,String idserv,String fecha,String fecha2,String idsede,String est){
 		User user = new User();
 		try{
 					PreparedStatement preparedStatement = connection
-					.prepareStatement("INSERT into incidencia(idincidencia,descripcion,idestado_incidencia,idtipo_incidencia,idservicio_detalle,FECHA_REGISTRO,FECHA_MODIFICACION) value (?,?,?,?,?,?,?)");		
+					.prepareStatement("INSERT into incidencia(idincidencia,descripcion,estado_incidencia,idtipo_incidencia,idservicio_detalle,fecha_registro,fecha_modificacion,idsede,estado) value (?,?,?,?,?,?,?,?,?)");		
 					preparedStatement.setInt(1, idinc);
 					preparedStatement.setString(2, desc);
 					preparedStatement.setString(3,idestadoinc);
@@ -606,6 +670,8 @@ public class UserService {
 					preparedStatement.setString(5,idserv);
 					preparedStatement.setString(6,fecha);
 					preparedStatement.setString(7,fecha2);
+					preparedStatement.setString(8,idsede);
+					preparedStatement.setString(9,est);
 					 preparedStatement.executeUpdate();
 					
 					} catch (SQLException e) {
@@ -621,6 +687,26 @@ public class UserService {
 		try{
 			PreparedStatement preparedStatement = connection.
 					prepareStatement("select count(*) from incidencia;");
+			ResultSet rs = preparedStatement.executeQuery();
+			
+			if(rs.next()){
+				
+				user.setUserid(rs.getInt("count(*)"));
+				
+				
+			}
+		} catch(SQLException e){
+			e.printStackTrace();
+		}
+		return user;
+	}
+	
+	public User countserv(String id){
+		User user = new User();
+		try{
+			PreparedStatement preparedStatement = connection.
+					prepareStatement("select count(*) from servicio_detalle where idchofer=? and estado='1';");
+			preparedStatement.setString(1, id);
 			ResultSet rs = preparedStatement.executeQuery();
 			
 			if(rs.next()){
@@ -728,7 +814,8 @@ public class UserService {
 		List<User> users = new ArrayList<User>();
 		try {
 			PreparedStatement preparedStatement = connection.
-					prepareStatement("SELECT DESCRIPCION FROM SERVICIO limit 15");
+					prepareStatement("SELECT DESCRIPCION FROM servicio limit 15");
+			
 			ResultSet rs = preparedStatement.executeQuery();
 			while (rs.next()) {
 				User user = new User();
@@ -743,16 +830,19 @@ public class UserService {
 		return users;
 	}
 	
-	public List<User> getlisttrasl() {
+	public List<User> getlisttrasl(String id) {
 		List<User> users = new ArrayList<User>();
 		try {
 			PreparedStatement preparedStatement = connection.
-					prepareStatement("SELECT idtrasladista FROM trasladista ");
+					prepareStatement("SELECT idtrasladista ,nombre,apellido FROM trasladista where idsede=?");
+			preparedStatement.setString(1, id);
 			ResultSet rs = preparedStatement.executeQuery();
 			while (rs.next()) {
 				User user = new User();
 
 				user.setFirstName(rs.getString("idtrasladista"));
+				user.setLastName(rs.getString("nombre"));
+				user.setdirecc(rs.getString("apellido"));
 				users.add(user);
 			}
 		} catch (SQLException e) {
@@ -1497,6 +1587,26 @@ public class UserService {
 			if(rs.next()){
 				
 				user.setFirstName(rs.getString("idSede"));
+				
+			}
+		} catch(SQLException e){
+			e.printStackTrace();
+		}
+		return user;
+	}
+	
+	public User getperfiladmin(String id){
+		User user = new User();
+		try{
+			PreparedStatement preparedStatement = connection.
+					prepareStatement("select b.apellidos , a.descripcion from usuario inner join empleado b on usuario.idempleado=b.idempleado inner join sede a on usuario.idsede=a.idsede where idusuario=?");
+			preparedStatement.setString(1, id);
+			ResultSet rs = preparedStatement.executeQuery();
+			
+			if(rs.next()){
+				
+				user.setFirstName(rs.getString("apellidos"));
+				user.setLastName(rs.getString("descripcion"));
 				
 			}
 		} catch(SQLException e){
