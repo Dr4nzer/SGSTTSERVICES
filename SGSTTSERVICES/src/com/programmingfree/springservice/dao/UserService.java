@@ -725,7 +725,7 @@ public class UserService {
 		User user = new User();
 		try{
 			PreparedStatement preparedStatement = connection.
-					prepareStatement("UPDATE servicio_detalle SET ESTADO=4 WHERE idservicio_detalle=?");
+					prepareStatement("UPDATE servicio_detalle SET estado_servicio='REALIZADO' WHERE idservicio_detalle=?");
 			preparedStatement.setString(1, id);
 			 preparedStatement.executeUpdate();
 		} catch(SQLException e){
