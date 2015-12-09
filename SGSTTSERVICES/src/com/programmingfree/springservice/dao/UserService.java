@@ -705,7 +705,7 @@ public class UserService {
 		User user = new User();
 		try{
 			PreparedStatement preparedStatement = connection.
-					prepareStatement("select count(*) from servicio_detalle where idchofer=? and estado='1';");
+					prepareStatement("select count(*) from servicio_detalle where idchofer=? and estado_servicio='PENDIENTE';");
 			preparedStatement.setString(1, id);
 			ResultSet rs = preparedStatement.executeQuery();
 			
