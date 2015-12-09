@@ -84,7 +84,7 @@ public class UserService {
 		List<User> users = new ArrayList<User>();
 		try {
 			PreparedStatement preparedStatement = connection.
-					prepareStatement("SELECT idservicio_detalle from servicio_detalle where idchofer=? and ESTADO=1 ORDER BY fecha ASC ");
+					prepareStatement("SELECT idservicio_detalle from servicio_detalle where idchofer=? and estado_servicio='PENDIENTE' ORDER BY fecha ASC ");
 			preparedStatement.setInt(1, userId);
 			ResultSet rs = preparedStatement.executeQuery();
 			while (rs.next()) {
