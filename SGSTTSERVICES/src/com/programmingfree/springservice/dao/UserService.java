@@ -246,7 +246,7 @@ public class UserService {
 			User user = new User();
 			try{
 				PreparedStatement preparedStatement = connection.
-						prepareStatement("SELECT idusuario FROM usuario WHERE idPERFIL=1 and nick=? and idsede=? and clave=?");
+						prepareStatement("SELECT idusuario FROM usuario WHERE idPERFIL IN ('1','2','3') and nick=? and idsede=? and clave=?");
 				preparedStatement.setString(1, obj);
 				preparedStatement.setString(2, obj2);
 				preparedStatement.setString(3, obj3);
