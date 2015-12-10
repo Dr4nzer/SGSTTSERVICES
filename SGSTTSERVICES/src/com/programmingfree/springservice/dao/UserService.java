@@ -1463,7 +1463,7 @@ public class UserService {
 		User user = new User();
 		try{
 			PreparedStatement preparedStatement = connection.
-					prepareStatement("SELECT nombre , apellido from Chofer where idchofer=?");
+					prepareStatement("SELECT nombre , apellido from chofer where idchofer=?");
 			preparedStatement.setString(1, id);
 			ResultSet rs = preparedStatement.executeQuery();
 			
