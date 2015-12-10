@@ -449,13 +449,14 @@ public class UserService {
 		User user = new User();
 		try{
 			PreparedStatement preparedStatement = connection.
-					prepareStatement("SELECT PAX from file where idFile=?");
+					prepareStatement("SELECT PAX , cuenta from file where idFile=?");
 			preparedStatement.setInt(1, userId);
 			ResultSet rs = preparedStatement.executeQuery();
 			
 			if(rs.next()){
 				
 				user.setFirstName(rs.getString("Pax"));
+				user.setLastName(rs.getString("cuenta"));
 		
 				
 			}
