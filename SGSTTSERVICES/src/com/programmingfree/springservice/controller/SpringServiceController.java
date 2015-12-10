@@ -286,6 +286,17 @@ public class SpringServiceController {
 		return users;
 	}
 	
+	@RequestMapping(value="/listchofer/{id}",method = RequestMethod.GET,headers="Accept=application/json")
+	public List<User> getlistchofer(@PathVariable String id) {
+		List<User> users=userService.getlistchofer(id);
+		return users;
+	}
+
+	@RequestMapping(value="/getdestinosxidservicio/{id}",method = RequestMethod.GET,headers="Accept=application/json")
+	public List<User> getdestinosxidservicio(@PathVariable String id) {
+		List<User> users=userService.getdestinosxidservicio(id);
+		return users;
+	}
 	@RequestMapping(value="/listasede",method = RequestMethod.GET,headers="Accept=application/json")
 	public List<User> listasede() {
 		List<User> users=userService.listasede();
@@ -295,6 +306,11 @@ public class SpringServiceController {
 	@RequestMapping(value = "/getdatostrasl/{id}", method = RequestMethod.GET,headers="Accept=application/json")
 	public User getdatostrasl(@PathVariable String id) {
 		User user=userService.getdatostrasl(id);
+		return user;
+	}
+	@RequestMapping(value = "/getdirecdestino/{id}", method = RequestMethod.GET,headers="Accept=application/json")
+	public User getdirecdestino(@PathVariable String id) {
+		User user=userService.getdirecdestino(id);
 		return user;
 	}
 	
@@ -328,6 +344,12 @@ public class SpringServiceController {
 		return user;
 	}
 	
+	@RequestMapping(value = "/getpass/{id}", method = RequestMethod.GET,headers="Accept=application/json")
+	public User getpass(@PathVariable String id) {
+		User user=userService.getpass(id);
+		return user;
+	}
+	
 	@RequestMapping(value = "/estadoid/{id}", method = RequestMethod.GET,headers="Accept=application/json")
 	public User idestado(@PathVariable String id) {
 		User user=userService.idestado(id);
@@ -349,6 +371,12 @@ public class SpringServiceController {
 	@RequestMapping(value = "/insertdatetimedestino/{id}/in/{fecha}", method = RequestMethod.GET,headers="Accept=application/json")
 	public User Insertdatetimedestino(@PathVariable  int id,@PathVariable String fecha) {
 		User user=userService.Insertdatetimedestino(id,fecha);
+		return user;
+	}
+	
+	@RequestMapping(value = "/changepass/{id}/in/{clave}", method = RequestMethod.GET,headers="Accept=application/json")
+	public User Insertdatetimedestino(@PathVariable String id,@PathVariable String clave) {
+		User user=userService.changepass(id,clave);
 		return user;
 	}
 	

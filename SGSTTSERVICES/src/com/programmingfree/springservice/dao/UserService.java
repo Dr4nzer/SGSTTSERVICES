@@ -84,13 +84,14 @@ public class UserService {
 		List<User> users = new ArrayList<User>();
 		try {
 			PreparedStatement preparedStatement = connection.
-					prepareStatement("SELECT idservicio_detalle from servicio_detalle where idchofer=? and estado_servicio='PENDIENTE' ORDER BY fecha ASC ");
+					prepareStatement("SELECT idservicio_detalle,descripcion from servicio_detalle where idchofer=? and estado_servicio='PENDIENTE' ORDER BY fecha ASC ");
 			preparedStatement.setInt(1, userId);
 			ResultSet rs = preparedStatement.executeQuery();
 			while (rs.next()) {
 				User user = new User();
 
 				user.setFirstName(rs.getString("idservicio_detalle"));
+				user.setLastName(rs.getString("descripcion"));
 				users.add(user);
 			}
 		} catch (SQLException e) {
@@ -110,6 +111,29 @@ public class UserService {
 				User user = new User();
 
 				user.setFirstName(rs.getString("idservicio_detalle"));
+				users.add(user);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return users;
+	}
+	
+	public List<User> getdestinosxidservicio(String id) {
+		List<User> users = new ArrayList<User>();
+		try {
+			PreparedStatement preparedStatement = connection.
+					prepareStatement("select a.iddestinos ,destinos_iddestinos ,a.tipo_destino,a.razonsocial,a.direccion from servicio_destinos inner join destinos a on destinos_iddestinos=a.iddestinos where servicio_idservicio=?");
+			preparedStatement.setString(1,id);
+			ResultSet rs = preparedStatement.executeQuery();
+			while (rs.next()) {
+				User user = new User();
+
+				user.setFirstName(rs.getString("tipo_destino"));
+				user.setLastName(rs.getString("razonsocial"));
+				user.setdirecc(rs.getString("direccion"));
+				user.setText(rs.getString("iddestinos"));
 				users.add(user);
 			}
 		} catch (SQLException e) {
@@ -348,13 +372,14 @@ public class UserService {
 		User user = new User();
 		try{
 			PreparedStatement preparedStatement = connection.
-					prepareStatement("SELECT cuenta from servicio_detalle where idservicio_detalle=?");
+					prepareStatement("SELECT comentario,cuenta from servicio_detalle where idservicio_detalle=?");
 			preparedStatement.setInt(1, userId);
 			ResultSet rs = preparedStatement.executeQuery();
 			
 			if(rs.next()){
 				
 				user.setFirstName(rs.getString("cuenta"));
+				user.setLastName(rs.getString("comentario"));
 				
 			}
 		} catch(SQLException e){
@@ -829,7 +854,7 @@ public class UserService {
 
 		return users;
 	}
-	
+
 	public List<User> getlisttrasl(String id) {
 		List<User> users = new ArrayList<User>();
 		try {
@@ -841,6 +866,28 @@ public class UserService {
 				User user = new User();
 
 				user.setFirstName(rs.getString("idtrasladista"));
+				user.setLastName(rs.getString("nombre"));
+				user.setdirecc(rs.getString("apellido"));
+				users.add(user);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return users;
+	}
+	
+	public List<User> getlistchofer(String id) {
+		List<User> users = new ArrayList<User>();
+		try {
+			PreparedStatement preparedStatement = connection.
+					prepareStatement("SELECT idchofer ,nombre,apellido FROM chofer where idsede=?");
+			preparedStatement.setString(1, id);
+			ResultSet rs = preparedStatement.executeQuery();
+			while (rs.next()) {
+				User user = new User();
+
+				user.setFirstName(rs.getString("idchofer"));
 				user.setLastName(rs.getString("nombre"));
 				user.setdirecc(rs.getString("apellido"));
 				users.add(user);
@@ -892,12 +939,31 @@ public class UserService {
 		}
 		return user;
 	}
-	
+	public User getdirecdestino(String id){
+		User user = new User();
+		try{
+			PreparedStatement preparedStatement = connection.
+					prepareStatement("select direccion,latitud,longitud from destinos where iddestinos=?");
+			preparedStatement.setString(1, id);
+			ResultSet rs = preparedStatement.executeQuery();
+			
+			if(rs.next()){
+				
+				user.setFirstName(rs.getString("direccion"));
+				user.setLastName(rs.getString("latitud"));
+				user.setText(rs.getString("longitud"));
+				
+			}
+		} catch(SQLException e){
+			e.printStackTrace();
+		}
+		return user;
+	}
 	public User getdatochofer(String id){
 		User user = new User();
 		try{
 			PreparedStatement preparedStatement = connection.
-					prepareStatement("SELECT nombre,apellido,categoria,S.descripcion as sedec from chofer a inner join sede S on S.idsede=a.idsede  where idchofer=?");
+					prepareStatement("SELECT nombre,apellido,a.celular,e.razon_social,categoria,S.descripcion as sedec from chofer a inner join sede S on S.idsede=a.idsede inner join empresa e on a.idempresa=e.idempresa where idchofer=?");
 			preparedStatement.setString(1, id);
 			ResultSet rs = preparedStatement.executeQuery();
 			
@@ -907,6 +973,8 @@ public class UserService {
 				user.setLastName(rs.getString("apellido"));
 				user.setEmail(rs.getString("categoria"));
 				user.settelf(rs.getString("sedec"));
+				user.setdirecc(rs.getString("celular"));
+				user.setText(rs.getString("razon_social"));
 				
 			}
 		} catch(SQLException e){
@@ -1016,6 +1084,25 @@ public class UserService {
 		}
 		return user;
 	}
+	public User getpass(String id){
+		User user = new User();
+		try{
+			PreparedStatement preparedStatement = connection.
+					prepareStatement("SELECT clave from chofer where idchofer=?");
+			preparedStatement.setString(1, id);
+			ResultSet rs = preparedStatement.executeQuery();
+			
+			if(rs.next()){
+				
+				user.setFirstName(rs.getString("clave"));
+
+				
+			}
+		} catch(SQLException e){
+			e.printStackTrace();
+		}
+		return user;
+	}
 	
 	public User Insertdatetimeorigen(int id,String fecha) {
 		
@@ -1052,7 +1139,25 @@ public class UserService {
 					}
 		return user;
 	}
-
+	
+	public User changepass(String id,String clave) {
+		
+		User user = new User();
+		try{
+					PreparedStatement preparedStatement = connection
+					.prepareStatement("UPDATE chofer SET clave=? WHERE idchofer=?");
+					
+					
+					preparedStatement.setString(1, clave);
+					preparedStatement.setString(2, id);
+					 preparedStatement.executeUpdate();
+					
+					} catch (SQLException e) {
+					e.printStackTrace();
+					}
+		return user;
+	}
+	
 	public User Insertcronometro(int id,String tiempo) {
 		
 		User user = new User();
@@ -1117,12 +1222,13 @@ public class UserService {
 		List<User> users = new ArrayList<User>();
 		try {
 			PreparedStatement preparedStatement = connection.
-					prepareStatement("SELECT idservicio_detalle FROM servicio_detalle where estado_SERVICIO='Pendiente'");
+					prepareStatement("SELECT idservicio_detalle,descripcion FROM servicio_detalle where estado_SERVICIO='Pendiente'");
 			ResultSet rs = preparedStatement.executeQuery();
 			while (rs.next()) {
 				User user = new User();
 
 				user.setFirstName(rs.getString("idservicio_detalle"));
+				user.setLastName(rs.getString("descripcion"));
 				users.add(user);
 			}
 		} catch (SQLException e) {
@@ -1136,12 +1242,13 @@ public class UserService {
 		List<User> users = new ArrayList<User>();
 		try {
 			PreparedStatement preparedStatement = connection.
-					prepareStatement("SELECT idservicio_detalle FROM servicio_detalle where estado_SERVICIO='Finalizado'");
+					prepareStatement("SELECT idservicio_detalle,descripcion FROM servicio_detalle where estado_SERVICIO='Finalizado'");
 			ResultSet rs = preparedStatement.executeQuery();
 			while (rs.next()) {
 				User user = new User();
 
 				user.setFirstName(rs.getString("idservicio_detalle"));
+				user.setLastName(rs.getString("descripcion"));
 				users.add(user);
 			}
 		} catch (SQLException e) {
