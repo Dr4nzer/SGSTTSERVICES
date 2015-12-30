@@ -37,6 +37,12 @@ public class SpringServiceController {
 		return user;
 	}
 	
+	@RequestMapping(value = "/getCurdate/", method = RequestMethod.GET,headers="Accept=application/json")
+	public User getCurdate() {
+		User user=userService.getCurdate();
+		return user;
+	}
+	
 	@RequestMapping(value = "/HoraSistema/", method = RequestMethod.GET,headers="Accept=application/json")
 	public User getHorasistema() {
 		User user=userService.getHora();
@@ -140,9 +146,9 @@ public class SpringServiceController {
 	}
 	
 	//LISTA ID INCIDENCIAS
-	@RequestMapping(value="/listaidincidencias/",method = RequestMethod.GET,headers="Accept=application/json")
-	public List<User> getAllidincidencias() {
-		List<User> users=userService.getAllidincidencias();
+	@RequestMapping(value="/listaidincidenciasA/{id}",method = RequestMethod.GET,headers="Accept=application/json")
+	public List<User> getAllidincidenciasA(@PathVariable String id) {
+		List<User> users=userService.getAllidincidenciasA(id);
 		return users;
 	}
 	
@@ -156,6 +162,18 @@ public class SpringServiceController {
 	@RequestMapping(value = "/countserv/{id}", method = RequestMethod.GET,headers="Accept=application/json")
 	public User countserv(@PathVariable String id) {
 		User user=userService.countserv(id);
+		return user;
+	}
+	
+	@RequestMapping(value = "/countservall/{id}", method = RequestMethod.GET,headers="Accept=application/json")
+	public User countservall(@PathVariable String id) {
+		User user=userService.countservall(id);
+		return user;
+	}
+	
+	@RequestMapping(value = "/countservallA/", method = RequestMethod.GET,headers="Accept=application/json")
+	public User countservallA() {
+		User user=userService.countservallA();
 		return user;
 	}
 	
@@ -350,6 +368,12 @@ public class SpringServiceController {
 		return user;
 	}
 	
+	@RequestMapping(value = "/getpassA/{id}", method = RequestMethod.GET,headers="Accept=application/json")
+	public User getpassA(@PathVariable String id) {
+		User user=userService.getpassA(id);
+		return user;
+	}
+	
 	@RequestMapping(value = "/estadoid/{id}", method = RequestMethod.GET,headers="Accept=application/json")
 	public User idestado(@PathVariable String id) {
 		User user=userService.idestado(id);
@@ -377,6 +401,12 @@ public class SpringServiceController {
 	@RequestMapping(value = "/changepass/{id}/in/{clave}", method = RequestMethod.GET,headers="Accept=application/json")
 	public User Insertdatetimedestino(@PathVariable String id,@PathVariable String clave) {
 		User user=userService.changepass(id,clave);
+		return user;
+	}
+	
+	@RequestMapping(value = "/changepassA/{id}/in/{clave}", method = RequestMethod.GET,headers="Accept=application/json")
+	public User changepassA(@PathVariable String id,@PathVariable String clave) {
+		User user=userService.changepassA(id,clave);
 		return user;
 	}
 	
@@ -537,6 +567,8 @@ public class SpringServiceController {
 			User user=userService.getidsede(id);
 			return user;
 	}	
+		
+	
 		//Obtener descripcion sede del vehiculo 
 		@RequestMapping(value = "/getdescripcionsede/{id}", method = RequestMethod.GET,headers="Accept=application/json")
 		public User getdescripcionsede(@PathVariable  String id) {
