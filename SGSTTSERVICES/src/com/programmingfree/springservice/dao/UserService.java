@@ -1666,6 +1666,26 @@ public class UserService {
 		return user;
 	}
 	
+	public User getdescripcion2(String id){
+		User user = new User();
+		try{
+			PreparedStatement preparedStatement = connection.
+					prepareStatement("SELECT descripcion2 from vehiculo where idvehiculo=?");
+			preparedStatement.setString(1, id);
+			ResultSet rs = preparedStatement.executeQuery();
+			
+			if(rs.next()){
+				
+				user.setFirstName(rs.getString("descripcion2"));
+
+				
+			}
+		} catch(SQLException e){
+			e.printStackTrace();
+		}
+		return user;
+	}
+	
 	//Obtener idVuelo de servicio_detalle(idservicio)
 	
 	public User getIdVuelo(String id){

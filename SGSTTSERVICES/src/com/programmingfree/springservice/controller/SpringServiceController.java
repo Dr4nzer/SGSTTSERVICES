@@ -534,6 +534,11 @@ public class SpringServiceController {
 			User user=userService.getPlacaDescripcionVehiculo(id);
 			return user;
 	}	
+		@RequestMapping(value = "/getdescripcion2/{id}", method = RequestMethod.GET,headers="Accept=application/json")
+		public User getdescripcion2(@PathVariable  String id) {
+			User user=userService.getdescripcion2(id);
+			return user;
+	}	
 	
 	//Obtener idVuelo de servicio_detalle
 		@RequestMapping(value = "/getIdVuelo/{id}", method = RequestMethod.GET,headers="Accept=application/json")
